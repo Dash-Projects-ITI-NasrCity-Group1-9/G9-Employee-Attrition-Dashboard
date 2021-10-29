@@ -1,0 +1,195 @@
+<html>
+<head>
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>HR Dashboad</title>
+</head>
+<body style="background:black">
+<div class="p-4 p-md-2 mb-4 text-white rounded" style="background:gray">
+    <div class="col-md-6 px-0">
+      <h1 class="display-4 fst-italic">HR Dashboad</h1>
+    </div>
+  </div>
+<div class="row row-cols-1 row-cols-md-4 mb-3 text-center">
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3" style="background:#560bad">
+            <h4 class="my-0 fw-normal text-muted fw-light">No. Of Employees</h4>
+          </div>
+          <div class="card-body" style="background:#48bfe3">
+            <h1 class="card-title pricing-card-title">{{no_employees}}</h1>
+           
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3" style="background:#560bad">
+            <h4 class="my-0 fw-normal text-muted fw-light" >Average Employees Age</h4>
+          </div>
+          <div class="card-body" style="background:#48bfe3">
+            <h1 class="card-title pricing-card-title">{{avg_age}}</h1>
+           
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3" style="background:#560bad">
+            <h4 class="my-0 fw-normal text-muted fw-light">Average Salary</h4>
+          </div>
+          <div class="card-body" style="background:#48bfe3">
+            <h1 class="card-title pricing-card-title">${{avg_salary}}<small class="text-muted fw-light">/mo</small></h1>
+            
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm ">
+          <div class="card-header py-3 " style="background: #560bad">
+            <h4 class="my-0 fw-normal text-muted fw-light">Average Working Hours</h4>
+          </div>
+          <div class="card-body" style="background: #48bfe3">
+            <h1 class="card-title pricing-card-title">{{avg_hours}}<small class="text-muted fw-light">/weak</small></h1>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    </br>
+
+    <div class="row row-cols-1 row-cols-md-4 mb-3 text-center">
+    <div class="col">
+    <div id="attrition" class="chart"></div>
+    </div>
+    <div class="col">
+    <div id="marital" class="chart"></div>
+    </div>
+    <div class="col">
+    <div id="gender" class="chart"></div>
+    </div>
+    <div class="col">
+    <div id="over" class="chart"></div>
+    </div>
+
+ </div>
+    </br>
+    </br> 
+      
+</br>
+    <div class="row row-cols-1 row-cols-md-3 mb-0 text-center">
+    <div class="col">
+    <div id="years" class="chart"></div>
+    </div>
+        <div class="row row-cols-1 row-cols-md-1 mb-0 text-center" style="position:relative; top:130px; left:100px;">
+            <div class="col">
+            <div class="btn-group-vertical" role="group" aria-label="Basic example " align="center" style="position:relative; top:-120px;">
+            <button type="button" class="btn btn-primary" onclick="callback('sales')">Sales</button>
+            <button type="button" class="btn btn-primary" onclick="callback('research')">Research and Development</button>
+            <button type="button" class="btn btn-primary" onclick="callback('hr')">Human Resources</button>
+            </div>
+        </div>
+        </div>
+
+
+    <div class="col">
+    <div id="salary" class="chart"></div>
+    </div>
+ </div>
+
+</div>
+
+
+
+
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+   <script type="text/javascript">
+        var attrition={{attritionJSON | safe}};
+        Plotly.newPlot('attrition', attrition, {});
+        var marital={{maritalJSON | safe}};
+        Plotly.newPlot('marital', marital, {});
+        var gender={{genderJSON | safe}};
+        Plotly.newPlot('gender', gender, {});
+        var over={{overJSON | safe}};
+        Plotly.newPlot('over', over, {});
+        var ig={{ig | safe}};
+        Plotly.newPlot('years', ig, {});
+        var ig1={{ig1 | safe}};
+        Plotly.newPlot('salary', ig1, {});
+
+
+
+    </script>
+    <script>
+        callback('sales');
+    </script>
+    <script>
+    async function callback(endpoint)
+    {
+
+        if(endpoint=="sales"){
+            let response1= await fetch("/callback/"+endpoint)
+            let response2=await fetch("/callback1/"+endpoint)
+            if (response1.ok && response2.ok){
+                let j=await response1.json();
+                let j1=await response2.json();
+                Plotly.newPlot('salary', j, {});
+                Plotly.newPlot('years', j1, {});
+            }
+        }
+        else  if(endpoint=="research"){
+            let response1 = await fetch("/callback/"+endpoint)
+            let response2=await fetch("/callback1/"+endpoint)
+            if (response1.ok && response2.ok){
+                let j=await response1.json();
+                let j1=await response2.json();
+                Plotly.newPlot('salary', j, {});
+                Plotly.newPlot('years', j1, {});
+            }
+        }
+        else if(endpoint=="hr"){
+            let response1 = await fetch("/callback/"+endpoint)
+            let response2=await fetch("/callback1/"+endpoint)
+            if (response1.ok && response2.ok){
+                let j=await response1.json();
+                let j1=await response2.json();
+                Plotly.newPlot('salary', j, {});
+                Plotly.newPlot('years', j1, {});
+            }
+        }
+        else if(endpoint=="All"){
+            let response1 = await fetch("/callback/"+endpoint)
+            let response2=await fetch("/callback1/"+endpoint)
+            if (response1.ok && response2.ok){
+                let j=await response1.json();
+                let j1=await response2.json();
+               
+              Plotly.newPlot('salary', j, {});
+              Plotly.newPlot('years', j1, {});
+            }
+        else {
+                    alert("HTTP-Error: " + response.status + "on error");
+        }
+        
+
+    }
+    }
+
+    </script>
+
+    <script>
+
+    
+    </script>
+
+
+</body>
+</html>
